@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:5.6-fpm
 
 RUN apt-get update && apt-get install -y \
 	bzip2 \
@@ -35,8 +35,6 @@ RUN { \
 RUN pecl install APCu-beta redis memcached \
 	&& docker-php-ext-enable apcu redis memcached
 
-RUN a2enmod rewrite
-
 ENV OWNCLOUD_VERSION 8.1.3
 VOLUME /var/www/html
 
@@ -51,4 +49,5 @@ RUN curl -fsSL -o owncloud.tar.bz2 \
 COPY docker-entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["apache2-foreground"]
+EXPOSE 9000
+CMD ["php-fpm"]
